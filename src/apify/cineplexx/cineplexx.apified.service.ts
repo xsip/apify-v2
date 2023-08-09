@@ -3,6 +3,7 @@ import { Apify, ApifyServiceOptions } from '../decorator'
 import * as fs from 'fs'
 import { toHtmlElement } from '../utils'
 import { CineplexxDetailsApifiedService } from '../cineplexx-details/cineplexx-details.apified.service'
+import { Page } from 'puppeteer'
 
 const detailService: CineplexxDetailsApifiedService =
   new CineplexxDetailsApifiedService()
@@ -48,4 +49,5 @@ export class CineplexxApifiedService
     this.data = data
     fs.writeFileSync('cineplexx.json', JSON.stringify(data), 'utf-8')
   }
+  async afterPageOpen(page: Page) {}
 }

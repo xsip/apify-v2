@@ -1,2 +1,2 @@
 import 'reflect-metadata'
-import './apify/cineplexx/index'
+import './apify/warda/index'

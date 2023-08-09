@@ -1,6 +1,7 @@
 import { CineplexxDetailApifyModel } from './model'
 import { Apify, ApifyServiceOptions } from '../decorator'
 import * as fs from 'fs'
+import { Page } from 'puppeteer'
 
 @Apify<CineplexxDetailApifyModel>({
   elementContainerSelector: { selector: '.filmdetails' },
@@ -28,4 +29,5 @@ export class CineplexxDetailsApifiedService
     this.data = data
     fs.writeFileSync('cineplexx.json', JSON.stringify(data), 'utf-8')
   }
+  async afterPageOpen(page: Page) {}
 }

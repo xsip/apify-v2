@@ -1,15 +1,21 @@
-import {AmazonApifyModel} from './model'
-import {Apify, ApifyServiceOptions} from '../decorator'
+import { AmazonApifyModel } from './model'
+import { Apify, ApifyServiceOptions } from '../decorator'
 import * as fs from 'fs'
-
+import { Page } from 'puppeteer'
 @Apify<AmazonApifyModel>({
   elementContainerSelector: '[data-component-type="s-search-result"]',
   childSelectors: {
-    productName: {selector: '.a-size-mini.a-spacing-none.a-color-base.s-line-clamp-2', get: 'innerText'}, // extracts innerText from .overview-element.seperator h2
-    price: '.a-price-whole'
+    productName: {
+      selector: '.a-size-mini.a-spacing-none.a-color-base.s-line-clamp-2',
+      get: 'innerText',
+    }, // extracts innerText from .overview-element.seperator h2
+    price: '.a-price-whole',
   },
 })
-export class AmazonApifiedService implements ApifyServiceOptions<AmazonApifyModel> {
+export class AmazonApifiedService
+  implements ApifyServiceOptions<AmazonApifyModel>
+{
+  data: AmazonApifyModel[] = []
   async load(): Promise<void> {
     console.log('LOAD')
   }
@@ -20,9 +26,8 @@ export class AmazonApifiedService implements ApifyServiceOptions<AmazonApifyMode
   }
 
   async onData(data: AmazonApifyModel[]) {
-    this.data = data;
+    this.data = data
     fs.writeFileSync('amazon.json', JSON.stringify(data), 'utf-8')
   }
-
-  data: AmazonApifyModel[] = [];
+  async afterPageOpen(page: Page) {}
 }

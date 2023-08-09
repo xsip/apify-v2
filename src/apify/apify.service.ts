@@ -24,6 +24,7 @@ export class ApifyService<T> {
     url: string,
     waitTill: 'networkidle0' | ((page: Page) => Promise<void>) = 'networkidle0',
     closePage = true,
+    afterPageOpen?: (page: Page) => Promise<void>,
   ): Promise<ApifyResponse<T>[]> {
     const page: Page = await this.browserService.browser.newPage()
     if (waitTill === 'networkidle0') {
@@ -32,6 +33,7 @@ export class ApifyService<T> {
       await page.goto(url)
       await waitTill(page)
     }
+    await afterPageOpen?.(page)
     await this.browserService.scrollToBottom(page)
     const functions = await this.extractFunctions(this.childSelectors, page)
     console.log(functions)
