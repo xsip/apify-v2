@@ -8,7 +8,7 @@ import { sleepAsync } from '../utils'
   elementContainerSelector: '.event_box',
   childSelectors: {
     eventName: '.event_details h3',
-    tags: ['.tag_category_names a'],
+    tags: [{ selector: '.tag_category_names a' }],
     image: { selector: '.event_image img', getAttribute: 'src' },
     location: '.event_time',
   },

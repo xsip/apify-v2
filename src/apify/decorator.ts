@@ -13,10 +13,20 @@ export type ChildApifyOptions<T> = {
           | [string]
           | ((element: string) => void)
           | CustomSelector
+          | CustomSelectorArray
           | ApifyOptions<U[K]>
       }
     : never
 }
+
+export type CustomSelectorArray = [
+  {
+    selector: string
+    getAttribute?: string
+    get?: keyof HTMLElement
+  },
+]
+
 export type CustomSelector = {
   selector: string
   checkIfExists?: boolean
@@ -37,6 +47,7 @@ export type ApifyOptions<T> = {
           | [string]
           | ((element: string) => void)
           | CustomSelector
+          | CustomSelectorArray
           | ChildApifyOptions<U[K]>
       }
     : never

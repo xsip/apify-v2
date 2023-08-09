@@ -1,3 +1,5 @@
+import { map } from 'lodash'
+
 export class FrontendHandler {
   async handle<T>(
     selectors: Record<keyof T, any>,
@@ -120,7 +122,7 @@ export class FrontendHandler {
         typeof selectors[key] === 'object' &&
         Array.isArray(selectors[key])
       ) {
-        response[key] = this.handleStringArraySelector(element, selectors, key)
+        response[key] = await this.handleArraySelector(element, selectors, key)
       } else if (typeof selectors[key] === 'object') {
         responses = await this.handleObject(
           selectors,
@@ -272,14 +274,39 @@ export class FrontendHandler {
     )
   }
 
-  handleStringArraySelector<T>(
+  async handleArraySelector<T>(
     element: HTMLElement,
     selectors: Record<keyof T, any>,
     key: keyof T,
+    fns?: any,
   ) {
+    const selector = selectors[key][0]
+    if (selector.selector) {
+      if (selector.getAttribute) {
+        return [
+          ...(element.querySelectorAll(
+            selector.selector,
+          ) as unknown as HTMLElement[]),
+        ].map(e => {
+          return e.getAttribute(selector.getAttribute)
+        })
+      } else if (selector.get) {
+        return [
+          ...(element.querySelectorAll(
+            selector.selector,
+          ) as unknown as HTMLElement[]),
+        ].map(e => {
+          let prop: any = e?.[selector.get as keyof HTMLElement]
+          if (typeof prop === 'function') {
+            prop = prop()
+          }
+          return prop
+        })
+      }
+    }
     return [
       ...(element.querySelectorAll(
-        selectors[key][0],
+        selector.selector,
       ) as unknown as HTMLElement[]),
     ].map(e => e.innerText)
   }
