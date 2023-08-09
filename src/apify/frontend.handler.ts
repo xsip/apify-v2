@@ -303,11 +303,14 @@ export class FrontendHandler {
           return prop
         })
       }
+      return [
+        ...(element.querySelectorAll(
+          selector.selector,
+        ) as unknown as HTMLElement[]),
+      ].map(e => e.innerText)
     }
     return [
-      ...(element.querySelectorAll(
-        selector.selector,
-      ) as unknown as HTMLElement[]),
+      ...(element.querySelectorAll(selector) as unknown as HTMLElement[]),
     ].map(e => e.innerText)
   }
 
