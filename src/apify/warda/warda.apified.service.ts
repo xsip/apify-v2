@@ -2,12 +2,12 @@ import { WardaApifyModel } from './model'
 import { Apify, ApifyServiceOptions } from '../decorator'
 import * as fs from 'fs'
 import { Page } from 'puppeteer'
-import { scrollToBottom, sleepAsync } from '../utils'
+import { sleepAsync } from '../utils'
 
 @Apify<WardaApifyModel>({
   elementContainerSelector: '.event_box',
   childSelectors: {
-    eventName: '.event_details h3', // extracts innerText from .overview-element.seperator h2
+    eventName: '.event_details h3',
     tags: ['.tag_category_names a'],
     image: { selector: '.event_image img', getAttribute: 'src' },
     location: '.event_time',

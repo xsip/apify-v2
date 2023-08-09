@@ -4,71 +4,71 @@
 
 ## Example Apified Class
 ```typescript
-@Apify<CineplexxApifyModel>({
-  elementContainerSelector: { selector: '.span3:has(.img-holder)' },
+import {WardaApifyModel} from './model'
+import {Apify, ApifyServiceOptions} from '../decorator'
+import * as fs from 'fs'
+import {Page} from 'puppeteer'
+import {sleepAsync} from '../utils'
+
+@Apify<WardaApifyModel>({
+  elementContainerSelector: '.event_box',
   childSelectors: {
-    movieName: 'h2',
-    url: { selector: 'h2 > a', getAttribute: 'href' },
-    imageUrl: { selector: '.content-image.lazy', getAttribute: 'src' },
-  },
-  transformers: {
-    movieName: async (data, obj) => {
-      return data.toLowerCase()
-    },
-
-    url: async data => {
-      return 'https:' + data
-    },
-
-    imageUrl: async data => {
-      return 'https:' + data
-    },
+    eventName: '.event_details h3',
+    tags: ['.tag_category_names a'],
+    image: { selector: '.event_image img', getAttribute: 'src' },
+    location: '.event_time',
   },
 })
-export class CineplexxApifiedService
-  implements ApifyServiceOptions<CineplexxApifyModel>
+export class WardaApifiedService
+  implements ApifyServiceOptions<WardaApifyModel>
 {
-  data: CineplexxApifyModel[] = []
-  _url = 'https://www.cineplexx.at/filme/bald-im-kino/'
-
   async load(): Promise<void> {
     console.log('LOAD')
   }
 
   async url() {
     console.log('URL')
-    return this._url
+    return 'https://warda.at/events/'
   }
 
-  async onData(data: CineplexxApifyModel[]) {
+  async onData(data: WardaApifyModel[]) {
     this.data = data
-    fs.writeFileSync('cineplexx.json', JSON.stringify(data), 'utf-8')
+    fs.writeFileSync('warda.json', JSON.stringify(data), 'utf-8')
   }
+  async afterPageOpen(page: Page) {
+    await page.evaluate(() => {
+      document.getElementById('date_today').click()
+    })
+    await sleepAsync(5000)
+  }
+
+  data: WardaApifyModel[] = []
 }
+
 ```
 
 ## Example usage using express server
 
 ```typescript
-import { CineplexxApifiedService } from './cineplexx.apified.service'
 import { BrowserService } from '../browser.service'
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Request, Response } from 'express'
+import { WardaApifiedService } from './warda.apified.service'
+  ;(async () => {
+  await new BrowserService().setup()
+  const wardaApifiedService = new WardaApifiedService()
+  const app: Express = express()
+  const port = 3333
 
-(async () => {
-  await new BrowserService().setup();
-  const cineplexxService = new CineplexxApifiedService()
-  const app: Express = express();
-  const port = 3333;
-
-  app.get('/',async  (req: Request, res: Response) => {
-    await cineplexxService.load();
-    res.send(cineplexxService.data);
-  });
+  app.get('/', async (req: Request, res: Response) => {
+    await wardaApifiedService.load()
+    res.send(wardaApifiedService.data)
+  })
 
   app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-  });
-})();
+    console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
+  })
+})()
+
 ```
 
 
