@@ -2,7 +2,7 @@ import { WardaApifyModel } from './model'
 import { Apify, ApifyServiceOptions } from '../decorator'
 import * as fs from 'fs'
 import { Page } from 'puppeteer'
-import { sleepAsync } from '../utils'
+import { scrollToBottom, sleepAsync } from '../utils'
 
 @Apify<WardaApifyModel>({
   elementContainerSelector: '.event_box',

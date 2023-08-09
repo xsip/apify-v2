@@ -77,9 +77,10 @@ import express, { Express, Request, Response } from 'express';
 ## Class
 ### Implements ApifyServiceOptions\<T>
 #### A Apify class needs to implement the ```ApifyServiceOptions<T>``` interface and define the following functions
-#### Function ```async url()```. This function will return the URL which apify will use to scrap data from.
-#### Function ```async load()```. This function will be called before the actual fetch/scrap process. Call it to trigger the data extraction!
-#### Function ```async onDataa()```. This function will be called After the data has been fetched. Do whatever you want with it!
+#### Function ```async url(): Promise<string>```. This function will return the URL which apify will use to scrap data from.
+#### Function ```async load(): Promise<void>```. This function will be called before the actual fetch/scrap process. Call it to trigger the data extraction!
+#### Function ```async onDataa(data: T): Promise<void>```. This function will be called After the data has been fetched. Do whatever you want with it!
+#### Function ```async afterPageOpen(page: Puppeteer.Page): Promise<void>```. This function will be called After the navigation to the page has been done. From here you can execute in the page's context or do other stuff using the Page Object.
 ## Decorator Object
 ```typescript
 export type ApifyOptions<T> = {

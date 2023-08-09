@@ -2,6 +2,7 @@ import { Page } from 'puppeteer'
 import { BrowserService } from './browser.service'
 import { FrontendHandler } from './frontend.handler'
 import { CustomSelector } from './decorator'
+import { scrollToBottom } from './utils'
 
 export type Transformers<T> = {
   [K in keyof T]?: (
@@ -34,7 +35,7 @@ export class ApifyService<T> {
       await waitTill(page)
     }
     await afterPageOpen?.(page)
-    await this.browserService.scrollToBottom(page)
+    await scrollToBottom(page)
     const functions = await this.extractFunctions(this.childSelectors, page)
     console.log(functions)
     page.on('console', msg => {
