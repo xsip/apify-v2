@@ -1,0 +1,6 @@
+*.config.js
+coverage
+.idea
+
+.gitiginore
+.prettierrc
