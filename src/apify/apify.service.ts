@@ -66,9 +66,25 @@ export class ApifyService<T> {
     )) as any[]
     for (const entry of res) {
       for (const key of Object.keys(this.transformers)) {
-        entry[key as keyof typeof entry] = await this.transformers[
-          key as keyof Transformers<T>
-        ]?.(entry[key as keyof typeof entry] as any, entry)
+        if (
+          typeof entry[key as keyof typeof entry] === 'object' &&
+          Array.isArray(entry[key as keyof typeof entry])
+        ) {
+          const copy = []
+          for (const item in entry[key]) {
+            copy.push(
+              await this.transformers[key as keyof Transformers<T>]?.(
+                entry[key][item] as any,
+                entry,
+              ),
+            )
+          }
+          entry[key] = copy
+        } else {
+          entry[key as keyof typeof entry] = await this.transformers[
+            key as keyof Transformers<T>
+          ]?.(entry[key as keyof typeof entry] as any, entry)
+        }
       }
     }
     if (closePage) await page.close()

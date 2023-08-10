@@ -12,6 +12,11 @@ import { sleepAsync } from '../utils'
     image: { selector: '.event_image img', getAttribute: 'src' },
     location: '.event_time',
   },
+  transformers: {
+    tags: async tag => {
+      return tag + '[TEST]'
+    },
+  },
 })
 export class WardaApifiedService
   implements ApifyServiceOptions<WardaApifyModel>
