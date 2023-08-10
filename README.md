@@ -4,19 +4,24 @@
 
 ## Example Apified Class
 ```typescript
-import {WardaApifyModel} from './model'
-import {Apify, ApifyServiceOptions} from '../decorator'
+import { WardaApifyModel } from './model'
+import { Apify, ApifyServiceOptions } from '../decorator'
 import * as fs from 'fs'
-import {Page} from 'puppeteer'
-import {sleepAsync} from '../utils'
+import { Page } from 'puppeteer'
+import { sleepAsync } from '../utils'
 
 @Apify<WardaApifyModel>({
   elementContainerSelector: '.event_box',
   childSelectors: {
     eventName: '.event_details h3',
-    tags: ['.tag_category_names a'],
+    tags: [{ selector: '.tag_category_names a' }],
     image: { selector: '.event_image img', getAttribute: 'src' },
     location: '.event_time',
+  },
+  transformers: {
+    tags: async tag => {
+      return tag + '[TEST]'
+    },
   },
 })
 export class WardaApifiedService
@@ -44,6 +49,7 @@ export class WardaApifiedService
 
   data: WardaApifyModel[] = []
 }
+
 
 ```
 
@@ -121,7 +127,22 @@ export type Transformers<T> = {
 
 ## Selectors
 
+### Selector can be a custom selector array
+```typescript
+export type CustomSelectorArray = [
+  {
+    selector: string
+    getAttribute?: string
+    get?: keyof HTMLElement
+  },
+]
+```
+#### the property ```selector``` is a selector which will be used internally using the ```querySelectorAll``` api.
+#### ```getAttribute``` extracts an attribute value from the queried Elements.
+#### if ```get``` is set to ```innerHtml``` for example, the return value will be an arry of elements ```innerHtml``` queried by the ```selector``` property.
+
 ### Selector can be a custom selector:
+
 ```typescript
 export type CustomSelector = {
   selector: string
