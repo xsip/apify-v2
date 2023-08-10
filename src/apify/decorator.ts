@@ -60,6 +60,7 @@ export type ApifyServiceOptions<T = any> = {
   onData: (data: T[]) => Promise<void>
   afterPageOpen: (page: Page) => Promise<void>
   data: T[]
+  closePageAfterQuery: boolean
 }
 
 export function Apify<T>(options: ApifyOptions<T>): any {
@@ -90,13 +91,13 @@ export function Apify<T>(options: ApifyOptions<T>): any {
           const url = await super.url()
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           await this.onData(
             await service.getElements(
               url,
               'networkidle0',
-              false,
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              this.closePageAfterQuery,
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               super.afterPageOpen,

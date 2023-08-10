@@ -4,12 +4,6 @@
 
 ## Example Apified Class
 ```typescript
-import { WardaApifyModel } from './model'
-import { Apify, ApifyServiceOptions } from '../decorator'
-import * as fs from 'fs'
-import { Page } from 'puppeteer'
-import { sleepAsync } from '../utils'
-
 @Apify<WardaApifyModel>({
   elementContainerSelector: '.event_box',
   childSelectors: {
@@ -48,9 +42,10 @@ export class WardaApifiedService
   }
 
   data: WardaApifyModel[] = []
+
+  closePageAfterQuery: boolean = true
+
 }
-
-
 ```
 
 ## Example usage using express server
@@ -83,6 +78,7 @@ import { WardaApifiedService } from './warda.apified.service'
 ## Class
 ### Implements ApifyServiceOptions\<T>
 #### A Apify class needs to implement the ```ApifyServiceOptions<T>``` interface and define the following functions
+#### Function ```closePageAfterQuery: boolean```. This boolean will decide if the page is closed after querying data.
 #### Function ```async url(): Promise<string>```. This function will return the URL which apify will use to scrap data from.
 #### Function ```async load(): Promise<void>```. This function will be called before the actual fetch/scrap process. Call it to trigger the data extraction!
 #### Function ```async onDataa(data: T): Promise<void>```. This function will be called After the data has been fetched. Do whatever you want with it!

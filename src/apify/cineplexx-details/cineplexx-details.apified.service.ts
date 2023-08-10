@@ -30,4 +30,6 @@ export class CineplexxDetailsApifiedService
     fs.writeFileSync('cineplexx.json', JSON.stringify(data), 'utf-8')
   }
   async afterPageOpen(page: Page) {}
+
+  closePageAfterQuery: boolean = false
 }

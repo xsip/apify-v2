@@ -42,4 +42,6 @@ export class WardaApifiedService
   }
 
   data: WardaApifyModel[] = []
+
+  closePageAfterQuery: boolean = true
 }
