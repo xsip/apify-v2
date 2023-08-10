@@ -71,7 +71,8 @@ import { WardaApifiedService } from './warda.apified.service'
 })()
 
 ```
-
+## Extension Loader Service
+#### The extension loader service will automatically load chrome extensions placed in the ``extensions folder``. ( AdBlock is pre-installed.)
 
 # API
 
