@@ -57,13 +57,17 @@ export class BrowserService {
     await page.setRequestInterception(false)
   }
 
-  async setup(extensionDir = './extensions', userDataDir = './chrome-data') {
+  async setup(
+    headless = false,
+    extensionDir = './extensions',
+    userDataDir = './chrome-data',
+  ) {
     if (this.setupDone) return
     const extensionLoaderService: ExtensionLoaderService =
       new ExtensionLoaderService()
     puppeteer.use(StealthPlugin())
     this._Browser = await puppeteer.launch({
-      headless: false,
+      headless,
       args: [
         '--no-sandbox',
         '--disable-extensions=false',
