@@ -22,7 +22,7 @@ import * as fs from 'fs'
     publishDate: 'p',
   },
   transformers: {
-    productPrice: (value): number => {
+    productPrice: async value => {
       return parseInt(value.replace('€', '').replace(/\./, ''))
     },
   },
