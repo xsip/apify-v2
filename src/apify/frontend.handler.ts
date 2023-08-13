@@ -168,6 +168,9 @@ export class FrontendHandler {
         )
       }
     } else if (selectors[key].selector) {
+      const targetElement: HTMLElement = element.querySelector(
+        selectors[key].selector,
+      ) as unknown as HTMLElement
       if (selectors[key].querySelectorAll && selectors[key].elementIndex >= 0) {
         response[key] = (
           element.querySelectorAll(
@@ -177,24 +180,14 @@ export class FrontendHandler {
           (selectors[key].get ?? 'innerText') as any as keyof HTMLElement
         ]
       } else if (selectors[key].checkIfExists) {
-        response[key] = !!(element.querySelector(
-          selectors[key].selector,
-        ) as unknown as HTMLElement)
+        response[key] = !!targetElement
       } else if (selectors[key].getAttribute) {
-        response[key] = (
-          element.querySelector(
-            selectors[key].selector,
-          ) as unknown as HTMLElement
-        )?.getAttribute(selectors[key].getAttribute)
+        response[key] = targetElement?.getAttribute(selectors[key].getAttribute)
       } else if (selectors[key].get) {
-        const e = element.querySelector(
-          selectors[key].selector,
-        ) as unknown as HTMLElement
-        let prop: any = e?.[selectors[key].get as keyof HTMLElement]
+        let prop: any = targetElement?.[selectors[key].get as keyof HTMLElement]
         if (typeof prop === 'function') {
           prop = prop()
         }
-
         response[key] = prop
       } else {
         response[key] =
@@ -281,21 +274,19 @@ export class FrontendHandler {
     fns?: any,
   ) {
     const selector = selectors[key][0]
+
     if (selector.selector) {
+      const targetElements: HTMLElement[] = [
+        ...(element.querySelectorAll(
+          selector.selector,
+        ) as unknown as HTMLElement[]),
+      ]
       if (selector.getAttribute) {
-        return [
-          ...(element.querySelectorAll(
-            selector.selector,
-          ) as unknown as HTMLElement[]),
-        ].map(e => {
+        return targetElements.map(e => {
           return e.getAttribute(selector.getAttribute)
         })
       } else if (selector.get) {
-        return [
-          ...(element.querySelectorAll(
-            selector.selector,
-          ) as unknown as HTMLElement[]),
-        ].map(e => {
+        return targetElements.map(e => {
           let prop: any = e?.[selector.get as keyof HTMLElement]
           if (typeof prop === 'function') {
             prop = prop()
@@ -303,11 +294,7 @@ export class FrontendHandler {
           return prop
         })
       }
-      return [
-        ...(element.querySelectorAll(
-          selector.selector,
-        ) as unknown as HTMLElement[]),
-      ].map(e => e.innerText)
+      return targetElements.map(e => e.innerText)
     }
     return [
       ...(element.querySelectorAll(selector) as unknown as HTMLElement[]),
