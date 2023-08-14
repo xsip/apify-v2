@@ -9,6 +9,10 @@ import { sleepAsync } from '../utils'
   childSelectors: {
     eventName: '.event_details h3',
     tags: [{ selector: '.tag_category_names a' }],
+    tags2: {
+      selector: '.tag_category_names',
+      get: ['nextElementSibling', 'innerHTML'],
+    },
     image: { selector: '.event_image img', getAttribute: 'src' },
     location: '.event_time',
   },

@@ -4,11 +4,21 @@
 
 ## Example Apified Class
 ```typescript
+import { WardaApifyModel } from './model'
+import { Apify, ApifyServiceOptions } from '../decorator'
+import * as fs from 'fs'
+import { Page } from 'puppeteer'
+import { sleepAsync } from '../utils'
+
 @Apify<WardaApifyModel>({
   elementContainerSelector: '.event_box',
   childSelectors: {
     eventName: '.event_details h3',
     tags: [{ selector: '.tag_category_names a' }],
+    tags2: {
+      selector: '.tag_category_names',
+      get: ['nextElementSibling', 'innerHTML'],
+    },
     image: { selector: '.event_image img', getAttribute: 'src' },
     location: '.event_time',
   },
@@ -44,8 +54,8 @@ export class WardaApifiedService
   data: WardaApifyModel[] = []
 
   closePageAfterQuery: boolean = true
-
 }
+
 ```
 
 ## Example usage using express server
@@ -136,7 +146,7 @@ export type CustomSelectorArray = [
 ```
 #### the property ```selector``` is a selector which will be used internally using the ```querySelectorAll``` api.
 #### ```getAttribute``` extracts an attribute value from the queried Elements.
-#### if ```get``` is set to ```innerHtml``` for example, the return value will be an arry of elements ```innerHtml``` queried by the ```selector``` property.
+#### if ```get``` is set to ```innerHtml``` for example, the return value will be an arry of elements ```innerHtml``` queried by the ```selector``` property. Get can also be an ``array``, where ```['nextElementSibling', 'innerHTML]``` for example will return the innerHTML of the next sibling.
 
 ### Selector can be a custom selector:
 

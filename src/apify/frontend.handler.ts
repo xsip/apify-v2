@@ -114,7 +114,6 @@ export class FrontendHandler {
       if (fns[this.buildFnSelector(key, selector)]) {
         response = await this.handleFn(response, element, key, selector)
         if ((key as string).includes('room')) {
-          debugger
         }
       } else if (typeof selectors[key] === 'string') {
         response[key] = this.handleStringSelector(element, selectors, key)
@@ -184,11 +183,24 @@ export class FrontendHandler {
       } else if (selectors[key].getAttribute) {
         response[key] = targetElement?.getAttribute(selectors[key].getAttribute)
       } else if (selectors[key].get) {
-        let prop: any = targetElement?.[selectors[key].get as keyof HTMLElement]
-        if (typeof prop === 'function') {
-          prop = prop()
+        if (Array.isArray(selectors[key].get)) {
+          let prop: any
+          for (const propPath of selectors[key].get) {
+            if (!prop) {
+              prop = targetElement?.[propPath as keyof HTMLElement]
+            } else {
+              prop = prop[propPath]
+            }
+            response[key] = prop
+          }
+        } else {
+          let prop: any =
+            targetElement?.[selectors[key].get as keyof HTMLElement]
+          if (typeof prop === 'function') {
+            prop = prop()
+          }
+          response[key] = prop
         }
-        response[key] = prop
       } else {
         response[key] =
           (element.querySelector(selectors[key]) as unknown as HTMLElement)
@@ -220,7 +232,6 @@ export class FrontendHandler {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       response[key] = res
-      debugger
     } else if ((key as string).split('_').length === 2) {
       if (
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -233,24 +244,19 @@ export class FrontendHandler {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         response[splitted[0]][splitted[1]].push(res)
-        debugger
       } else {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         response[splitted[0]][splitted[1]] = res
       }
-
-      debugger
     } else if ((key as string).split('_').length === 3) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       response[splitted[0]][splitted[1]][splitted[2]] = res
-      debugger
     } else if ((key as string).split('_').length === 4) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       response[splitted[0]][splitted[1]][splitted[2]][splitted[3]] = res
-      debugger
     }
 
     return response

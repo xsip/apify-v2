@@ -1,5 +1,6 @@
 import { ApifyService, Transformers } from './apify.service'
 import { Page } from 'puppeteer'
+import * as fs from 'fs'
 
 export type ChildApifyOptions<T> = {
   elementContainerSelector: string
@@ -31,7 +32,7 @@ export type CustomSelector = {
   selector: string
   checkIfExists?: boolean
   getAttribute?: string
-  get?: keyof HTMLElement
+  get?: keyof HTMLElement | (keyof HTMLElement | string)[]
   querySelectorAll?: boolean
   elementIndex?: number
 }
@@ -73,6 +74,11 @@ export function Apify<T>(options: ApifyOptions<T>): any {
       constructor(...args: any[]) {
         super(...args)
 
+        fs.writeFileSync(
+          'config.json',
+          JSON.stringify(options, null, 2),
+          'utf-8',
+        )
         const service = new ApifyService<any>(
           options.single,
           options.elementContainerSelector,
