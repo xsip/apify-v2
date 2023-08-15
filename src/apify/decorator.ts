@@ -24,7 +24,7 @@ export type CustomSelectorArray = [
   {
     selector: string
     getAttribute?: string
-    get?: keyof HTMLElement
+    get?: keyof HTMLElement | (keyof HTMLElement | string)[]
   },
 ]
 

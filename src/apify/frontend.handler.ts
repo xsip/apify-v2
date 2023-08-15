@@ -293,11 +293,23 @@ export class FrontendHandler {
         })
       } else if (selector.get) {
         return targetElements.map(e => {
-          let prop: any = e?.[selector.get as keyof HTMLElement]
-          if (typeof prop === 'function') {
-            prop = prop()
+          if (Array.isArray(selector.get)) {
+            let prop: any
+            for (const propPath of selector.get) {
+              if (!prop) {
+                prop = e?.[propPath as keyof HTMLElement]
+              } else {
+                prop = prop[propPath]
+              }
+            }
+            return prop
+          } else {
+            let prop: any = e?.[selector.get as keyof HTMLElement]
+            if (typeof prop === 'function') {
+              prop = prop()
+            }
+            return prop
           }
-          return prop
         })
       }
       return targetElements.map(e => e.innerText)
