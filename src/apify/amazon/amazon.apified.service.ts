@@ -11,6 +11,7 @@ import { Page } from 'puppeteer'
       get: 'innerText',
     }, // extracts innerText from .overview-element.seperator h2
     price: '.a-price-whole',
+    imageUrl: { selector: '.s-image', get: 'src' },
     deliveryDate: {
       selector: '.s-prime',
       get: [

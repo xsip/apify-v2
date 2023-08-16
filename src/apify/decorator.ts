@@ -27,6 +27,7 @@ export type CustomSelectorArray = [
     get?:
       | keyof HTMLElement
       | keyof Element
+      | string
       | (keyof HTMLElement | string | keyof Element)[]
   },
 ]
@@ -38,6 +39,7 @@ export type CustomSelector = {
   get?:
     | keyof HTMLElement
     | keyof Element
+    | string
     | (keyof HTMLElement | string | keyof Element)[]
   querySelectorAll?: boolean
   elementIndex?: number
