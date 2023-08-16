@@ -1,2 +1,2 @@
 import 'reflect-metadata'
-import './apify/warda/index'
+import './apify/amazon/index'

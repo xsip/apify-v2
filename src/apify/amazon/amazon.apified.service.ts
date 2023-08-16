@@ -11,6 +11,16 @@ import { Page } from 'puppeteer'
       get: 'innerText',
     }, // extracts innerText from .overview-element.seperator h2
     price: '.a-price-whole',
+    deliveryDate: {
+      selector: '.s-prime',
+      get: [
+        'parentElement',
+        'parentElement',
+        'nextElementSibling',
+        'innerText',
+      ],
+    },
+    isPrime: { selector: '.s-prime', checkIfExists: true },
   },
 })
 export class AmazonApifiedService
@@ -28,7 +38,6 @@ export class AmazonApifiedService
 
   async onData(data: AmazonApifyModel[]) {
     this.data = data
-    fs.writeFileSync('amazon.json', JSON.stringify(data), 'utf-8')
   }
   async afterPageOpen(page: Page) {}
 

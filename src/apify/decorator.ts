@@ -24,7 +24,10 @@ export type CustomSelectorArray = [
   {
     selector: string
     getAttribute?: string
-    get?: keyof HTMLElement | (keyof HTMLElement | string)[]
+    get?:
+      | keyof HTMLElement
+      | keyof Element
+      | (keyof HTMLElement | string | keyof Element)[]
   },
 ]
 
@@ -32,7 +35,10 @@ export type CustomSelector = {
   selector: string
   checkIfExists?: boolean
   getAttribute?: string
-  get?: keyof HTMLElement | (keyof HTMLElement | string)[]
+  get?:
+    | keyof HTMLElement
+    | keyof Element
+    | (keyof HTMLElement | string | keyof Element)[]
   querySelectorAll?: boolean
   elementIndex?: number
 }
@@ -74,11 +80,6 @@ export function Apify<T>(options: ApifyOptions<T>): any {
       constructor(...args: any[]) {
         super(...args)
 
-        fs.writeFileSync(
-          'config.json',
-          JSON.stringify(options, null, 2),
-          'utf-8',
-        )
         const service = new ApifyService<any>(
           options.single,
           options.elementContainerSelector,
