@@ -11,6 +11,10 @@ import { Page } from 'puppeteer'
       get: 'innerText',
     }, // extracts innerText from .overview-element.seperator h2
     price: '.a-price-whole',
+    link: {
+      selector: '.a-size-mini.a-spacing-none.a-color-base.s-line-clamp-2 a',
+      get: 'href',
+    },
     originalPrice: { selector: '.a-price.a-text-price span', get: 'innerText' },
     imageUrl: { selector: '.s-image', get: 'src' },
     deliveryDate: {

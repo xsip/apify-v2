@@ -5,4 +5,5 @@ export type AmazonApifyModel = {
   deliveryDate: string
   imageUrl: string
   isPrime: boolean
+  link: string
 }
