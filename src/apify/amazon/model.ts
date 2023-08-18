@@ -6,4 +6,5 @@ export type AmazonApifyModel = {
   imageUrl: string
   isPrime: boolean
   link: string
+  nextLink: string
 }

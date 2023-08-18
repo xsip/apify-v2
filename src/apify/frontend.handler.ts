@@ -141,9 +141,11 @@ export class FrontendHandler {
     key: keyof T,
     responses: any[],
     fns: Record<string, boolean>,
-    element: any,
+    _element: any,
     response: Record<keyof T, unknown>,
   ) {
+    let element = _element
+    if (selectors[key].useDocument) element = document
     if (selectors[key].elementContainerSelector) {
       if (!selectors[key].single) {
         responses = await this.getResponseMulti(
@@ -274,13 +276,17 @@ export class FrontendHandler {
   }
 
   async handleArraySelector<T>(
-    element: HTMLElement,
+    _element: HTMLElement,
     selectors: Record<keyof T, any>,
     key: keyof T,
     fns?: any,
   ) {
-    const selector = selectors[key][0]
+    let element: any = _element
 
+    const selector = selectors[key][0]
+    if (selector.useDocument) {
+      element = document
+    }
     if (selector.selector) {
       const targetElements: HTMLElement[] = [
         ...(element.querySelectorAll(

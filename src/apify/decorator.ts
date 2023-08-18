@@ -24,6 +24,7 @@ export type CustomSelectorArray = [
   {
     selector: string
     getAttribute?: string
+    useDocument?: boolean
     get?:
       | keyof HTMLElement
       | keyof Element
@@ -43,6 +44,7 @@ export type CustomSelector = {
     | (keyof HTMLElement | string | keyof Element)[]
   querySelectorAll?: boolean
   elementIndex?: number
+  useDocument?: boolean
 }
 export type ApifyOptions<T> = {
   elementContainerSelector: string | CustomSelector
