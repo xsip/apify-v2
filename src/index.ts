@@ -1,2 +1,2 @@
 import 'reflect-metadata'
-import './apify/amazon/index'
+import './apify/youtube/index'
