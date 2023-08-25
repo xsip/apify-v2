@@ -41,7 +41,6 @@ export class YoutubeApifiedService
 
   async onData(data: YoutubeApifyModel[]) {
     this.data = data
-    fs.writeFileSync('cineplexx.json', JSON.stringify(data), 'utf-8')
   }
   async afterPageOpen(page: Page) {}
 
