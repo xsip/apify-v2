@@ -46,11 +46,11 @@ export type CustomSelector = {
   elementIndex?: number
   useDocument?: boolean
 }
-export type ApifyOptions<T> = {
+export type ApifyOptions<IN, OUT = IN> = {
   elementContainerSelector: string | CustomSelector
   single?: boolean
   childSelectors?: (
-    T extends readonly unknown[] ? T[number] : T
+    IN extends readonly unknown[] ? IN[number] : IN
   ) extends infer U
     ? {
         [K in keyof U]?:
@@ -62,7 +62,7 @@ export type ApifyOptions<T> = {
           | ChildApifyOptions<U[K]>
       }
     : never
-  transformers?: Transformers<T>
+  transformers?: Transformers<IN, OUT>
 }
 
 export type ApifyServiceOptions<T = any> = {
@@ -74,7 +74,7 @@ export type ApifyServiceOptions<T = any> = {
   closePageAfterQuery: boolean
 }
 
-export function Apify<T>(options: ApifyOptions<T>): any {
+export function Apify<IN, OUT = IN>(options: ApifyOptions<IN, OUT>): any {
   return function _logic<
     T extends { new (...args: any[]): object } & ApifyServiceOptions<T>,
   >(constructor: T) {

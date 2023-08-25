@@ -4,11 +4,12 @@ import { FrontendHandler } from './frontend.handler'
 import { CustomSelector } from './decorator'
 import { scrollToBottom } from './utils'
 
-export type Transformers<T> = {
-  [K in keyof T]?: (
-    value: T[K] extends readonly unknown[] ? T[K][number] : T[K],
-    obj: T,
-  ) => Promise<any>
+export type Transformers<IN, OUT = IN> = {
+  [K in keyof IN]?: (
+    value: string,
+    // value: IN[K] extends readonly unknown[] ? IN[K][number] : IN[K],
+    obj: IN,
+  ) => Promise<OUT[K] extends readonly unknown[] ? OUT[K][number] : OUT[K]>
 }
 export type ApifyResponse<T> = Record<keyof T, string>
 

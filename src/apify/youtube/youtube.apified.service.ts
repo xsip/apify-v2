@@ -1,4 +1,4 @@
-import { YoutubeApifyModel } from './model'
+import { YoutubeApifyModel, YoutubeApifyModelOut } from './model'
 import { Apify, ApifyServiceOptions } from '../decorator'
 import * as fs from 'fs'
 import { Page } from 'puppeteer'
