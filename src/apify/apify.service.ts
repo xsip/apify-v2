@@ -9,7 +9,7 @@ export type Transformers<IN, OUT = IN> = {
     value: string,
     // value: IN[K] extends readonly unknown[] ? IN[K][number] : IN[K],
     obj: IN,
-  ) => Promise<OUT[K] extends readonly unknown[] ? OUT[K][number] : OUT[K]>
+  ) => Promise<IN[K] extends readonly unknown[] ? IN[K][number] : IN[K]>
 }
 export type ApifyResponse<T> = Record<keyof T, string>
 
