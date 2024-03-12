@@ -1,8 +1,8 @@
-import { WillhabenApifyModel } from './model'
-import { Apify, ApifyServiceOptions } from '../decorator'
-import * as console from 'console'
-import * as fs from 'fs'
-import { Page } from 'puppeteer'
+import { WillhabenApifyModel } from './model';
+import { Apify, ApifyServiceOptions } from '../decorator';
+import * as console from 'console';
+import * as fs from 'fs';
+import { Page } from 'puppeteer';
 
 @Apify<WillhabenApifyModel>({
   elementContainerSelector: '[id^="search-result-entry-header-"]',
@@ -12,39 +12,40 @@ import { Page } from 'puppeteer'
     productDescription: {
       selector: 'span',
       querySelectorAll: true,
-      elementIndex: 1
+      elementIndex: 1,
     },
     productDescription2: {
       selector: 'span',
       querySelectorAll: true,
       elementIndex: 2,
-      get: 'outerHTML'
+      get: 'outerHTML',
     },
-    publishDate: 'p'
+    publishDate: 'p',
   },
   transformers: {
-    productPrice: async value => {
-      return parseInt(value.replace('€', '').replace(/\./, ''))
-    }
-  }
+    productPrice: async (value) => {
+      return parseInt(value.replace('€', '').replace(/\./, ''));
+    },
+  },
 })
 export class WillhabenApifyService
-  implements ApifyServiceOptions<WillhabenApifyModel> {
+  implements ApifyServiceOptions<WillhabenApifyModel>
+{
   afterPageOpen(page: Page): Promise<void> {
     return;
   }
-  data: WillhabenApifyModel[]
-  closePageAfterQuery: boolean
+  data: WillhabenApifyModel[];
+  closePageAfterQuery: boolean;
   async load(): Promise<void> {
-    console.log('LOAD')
+    console.log('LOAD');
   }
 
   async url() {
-    console.log('URL')
-    return 'https://www.willhaben.at/iad/kaufen-und-verkaufen/marktplatz/computer-tablets/notebooks-5831'
+    console.log('URL');
+    return 'https://www.willhaben.at/iad/kaufen-und-verkaufen/marktplatz/computer-tablets/notebooks-5831';
   }
 
   async onData(data: WillhabenApifyModel[]) {
-    fs.writeFileSync('wh.json', JSON.stringify(data, null, 2), 'utf-8')
+    fs.writeFileSync('wh.json', JSON.stringify(data, null, 2), 'utf-8');
   }
 }

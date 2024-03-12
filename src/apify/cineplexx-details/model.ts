@@ -1,3 +1,3 @@
 export type CineplexxDetailApifyModel = {
-  imageUrl: string
-}
+  imageUrl: string;
+};

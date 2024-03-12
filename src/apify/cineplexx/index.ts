@@ -1,14 +1,14 @@
-import { CineplexxApifiedService } from './cineplexx.apified.service'
-import { BrowserService } from '../browser.service'
+import { CineplexxApifiedService } from './cineplexx.apified.service';
+import { BrowserService } from '../browser.service';
 import express, { Express, Request, Response } from 'express';
 
 (async () => {
   await new BrowserService().setup();
-  const cineplexxService = new CineplexxApifiedService()
+  const cineplexxService = new CineplexxApifiedService();
   const app: Express = express();
   const port = 3333;
 
-  app.get('/',async  (req: Request, res: Response) => {
+  app.get('/', async (req: Request, res: Response) => {
     await cineplexxService.load();
     res.send(cineplexxService.data);
   });
@@ -17,7 +17,6 @@ import express, { Express, Request, Response } from 'express';
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
   });
 })();
-
 
 /*;(async () => {
   await service.load()

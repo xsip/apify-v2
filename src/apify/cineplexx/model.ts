@@ -3,4 +3,4 @@ export type CineplexxApifyModel = {
   url: string;
   imageUrl: string;
   startDate: string;
-}
+};

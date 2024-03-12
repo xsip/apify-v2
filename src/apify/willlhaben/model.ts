@@ -4,4 +4,4 @@ export type WillhabenApifyModel = {
   productDescription: string;
   productDescription2: string;
   publishDate: string;
-}
+};

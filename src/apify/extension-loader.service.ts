@@ -4,13 +4,19 @@ export class ExtensionLoaderService {
   private disableExceptArg!: string;
   private loadListArg: string[] = [];
 
-  getAllExtensionFilePaths(dirPath = './extensions', extensionList: string[] = []) {
+  getAllExtensionFilePaths(
+    dirPath = './extensions',
+    extensionList: string[] = [],
+  ) {
     const fileAndFolders: string[] = fs.readdirSync(dirPath);
     extensionList = extensionList || [];
 
     fileAndFolders.forEach((fileOrFolder: string) => {
       if (fs.statSync(dirPath + '/' + fileOrFolder).isDirectory()) {
-        extensionList = this.getAllExtensionFilePaths(dirPath + '/' + fileOrFolder, extensionList);
+        extensionList = this.getAllExtensionFilePaths(
+          dirPath + '/' + fileOrFolder,
+          extensionList,
+        );
       } else if (fileOrFolder.toLowerCase() === 'manifest.json') {
         extensionList.push(dirPath, '/' /*, fileOrFolder*/);
       }

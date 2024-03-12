@@ -1,4 +1,4 @@
-import { map } from 'lodash'
+import { map } from 'lodash';
 
 export class FrontendHandler {
   async handle<T>(
@@ -7,24 +7,24 @@ export class FrontendHandler {
     single: boolean,
     fns: Record<keyof T, boolean>,
   ) {
-    let responses: any[] = []
+    let responses: any[] = [];
     if (!single) {
       responses = await this.getResponseMulti(
         fns,
         responses,
         elementContainerSelector,
         selectors,
-      )
+      );
     } else {
       responses = await this.getResponseSingle(
         fns,
         responses,
         elementContainerSelector,
         selectors,
-      )
+      );
     }
 
-    return responses
+    return responses;
   }
 
   async getResponseSingle<T = any>(
@@ -37,8 +37,8 @@ export class FrontendHandler {
     object?: any,
   ) {
     /*return*/
-    const element = _element.querySelector(topLevelSelector)
-    let response: Record<keyof T, unknown> = {} as Record<keyof T, unknown>
+    const element = _element.querySelector(topLevelSelector);
+    let response: Record<keyof T, unknown> = {} as Record<keyof T, unknown>;
 
     const __ret = await this.handleElement(
       selectors,
@@ -47,16 +47,16 @@ export class FrontendHandler {
       response,
       element,
       responses,
-    )
-    response = __ret.response
-    responses = __ret.responses
+    );
+    response = __ret.response;
+    responses = __ret.responses;
     if (object) {
-      object[selector] = response
+      object[selector] = response;
     } else {
-      responses.push(response)
+      responses.push(response);
     }
 
-    return responses
+    return responses;
   }
 
   async getResponseMulti<T = any>(
@@ -72,7 +72,7 @@ export class FrontendHandler {
     for (const element of [
       ..._element.querySelectorAll(topLevelSelector),
     ]) /*.map((element) =>*/ {
-      let response: Record<keyof T, unknown> = {} as Record<keyof T, unknown>
+      let response: Record<keyof T, unknown> = {} as Record<keyof T, unknown>;
 
       const __ret = await this.handleElement(
         selectors,
@@ -81,21 +81,21 @@ export class FrontendHandler {
         response,
         element,
         responses,
-      )
+      );
 
-      response = __ret.response
-      responses = __ret.responses
+      response = __ret.response;
+      responses = __ret.responses;
       if (object) {
         if (!object[selector]) {
-          object[selector] = []
+          object[selector] = [];
         }
-        object[selector].push(response)
+        object[selector].push(response);
       } else {
-        responses.push(response)
+        responses.push(response);
       }
     }
 
-    return responses
+    return responses;
   }
 
   private async handleElement<T>(
@@ -110,18 +110,18 @@ export class FrontendHandler {
       ...Object.keys(selectors),
       ...Object.keys(fns),
     ]) /*.forEach((key) =>*/ {
-      const key = _key as keyof T
+      const key = _key as keyof T;
       if (fns[this.buildFnSelector(key, selector)]) {
-        response = await this.handleFn(response, element, key, selector)
+        response = await this.handleFn(response, element, key, selector);
         if ((key as string).includes('room')) {
         }
       } else if (typeof selectors[key] === 'string') {
-        response[key] = this.handleStringSelector(element, selectors, key)
+        response[key] = this.handleStringSelector(element, selectors, key);
       } else if (
         typeof selectors[key] === 'object' &&
         Array.isArray(selectors[key])
       ) {
-        response[key] = await this.handleArraySelector(element, selectors, key)
+        response[key] = await this.handleArraySelector(element, selectors, key);
       } else if (typeof selectors[key] === 'object') {
         responses = await this.handleObject(
           selectors,
@@ -130,10 +130,10 @@ export class FrontendHandler {
           fns,
           element,
           response,
-        )
+        );
       }
     } // );
-    return { response, responses }
+    return { response, responses };
   }
 
   private async handleObject<T>(
@@ -144,8 +144,8 @@ export class FrontendHandler {
     _element: any,
     response: Record<keyof T, unknown>,
   ) {
-    let element = _element
-    if (selectors[key].useDocument) element = document
+    let element = _element;
+    if (selectors[key].useDocument) element = document;
     if (selectors[key].elementContainerSelector) {
       if (!selectors[key].single) {
         responses = await this.getResponseMulti(
@@ -156,7 +156,7 @@ export class FrontendHandler {
           element,
           key as any,
           response,
-        )
+        );
       } else {
         responses = await this.getResponseSingle(
           fns,
@@ -166,12 +166,12 @@ export class FrontendHandler {
           element,
           key as any,
           response,
-        )
+        );
       }
     } else if (selectors[key].selector) {
       const targetElement: HTMLElement = element.querySelector(
         selectors[key].selector,
-      ) as unknown as HTMLElement
+      ) as unknown as HTMLElement;
       if (selectors[key].querySelectorAll && selectors[key].elementIndex >= 0) {
         response[key] = (
           element.querySelectorAll(
@@ -179,37 +179,39 @@ export class FrontendHandler {
           ) as unknown as HTMLElement[]
         )?.[selectors[key].elementIndex]?.[
           (selectors[key].get ?? 'innerText') as any as keyof HTMLElement
-        ]
+        ];
       } else if (selectors[key].checkIfExists) {
-        response[key] = !!targetElement
+        response[key] = !!targetElement;
       } else if (selectors[key].getAttribute) {
-        response[key] = targetElement?.getAttribute(selectors[key].getAttribute)
+        response[key] = targetElement?.getAttribute(
+          selectors[key].getAttribute,
+        );
       } else if (selectors[key].get) {
         if (Array.isArray(selectors[key].get)) {
-          let prop: any
+          let prop: any;
           for (const propPath of selectors[key].get) {
             if (!prop) {
-              prop = targetElement?.[propPath as keyof HTMLElement]
+              prop = targetElement?.[propPath as keyof HTMLElement];
             } else {
-              prop = prop[propPath]
+              prop = prop[propPath];
             }
-            response[key] = prop
+            response[key] = prop;
           }
         } else {
           let prop: any =
-            targetElement?.[selectors[key].get as keyof HTMLElement]
+            targetElement?.[selectors[key].get as keyof HTMLElement];
           if (typeof prop === 'function') {
-            prop = prop()
+            prop = prop();
           }
-          response[key] = prop
+          response[key] = prop;
         }
       } else {
         response[key] =
           (element.querySelector(selectors[key]) as unknown as HTMLElement)
-            ?.innerText ?? ('' as any)
+            ?.innerText ?? ('' as any);
       }
     }
-    return responses
+    return responses;
   }
 
   private async handleFn<T>(
@@ -219,21 +221,21 @@ export class FrontendHandler {
     selector: string,
   ) {
     if (!response) {
-      response = {} as any
+      response = {} as any;
     }
 
     // fns[buildFnSelector(key, selector) as keyof T]) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
-    window.el = element
-    const splitted = (key as string).split('_')
+    window.el = element;
+    const splitted = (key as string).split('_');
     const res = await eval(
       `${this.buildFnSelector(key, selector)}(window.el.outerHTML);`,
-    )
+    );
     if ((key as string).split('_').length === 1) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      response[key] = res
+      response[key] = res;
     } else if ((key as string).split('_').length === 2) {
       if (
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -245,23 +247,23 @@ export class FrontendHandler {
       ) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        response[splitted[0]][splitted[1]].push(res)
+        response[splitted[0]][splitted[1]].push(res);
       } else {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        response[splitted[0]][splitted[1]] = res
+        response[splitted[0]][splitted[1]] = res;
       }
     } else if ((key as string).split('_').length === 3) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      response[splitted[0]][splitted[1]][splitted[2]] = res
+      response[splitted[0]][splitted[1]][splitted[2]] = res;
     } else if ((key as string).split('_').length === 4) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      response[splitted[0]][splitted[1]][splitted[2]][splitted[3]] = res
+      response[splitted[0]][splitted[1]][splitted[2]][splitted[3]] = res;
     }
 
-    return response
+    return response;
   }
 
   handleStringSelector<T>(
@@ -272,7 +274,7 @@ export class FrontendHandler {
     return (
       (element.querySelector(selectors[key]) as unknown as HTMLElement)
         ?.innerText ?? ('' as any)
-    )
+    );
   }
 
   async handleArraySelector<T>(
@@ -281,51 +283,51 @@ export class FrontendHandler {
     key: keyof T,
     fns?: any,
   ) {
-    let element: any = _element
+    let element: any = _element;
 
-    const selector = selectors[key][0]
+    const selector = selectors[key][0];
     if (selector.useDocument) {
-      element = document
+      element = document;
     }
     if (selector.selector) {
       const targetElements: HTMLElement[] = [
         ...(element.querySelectorAll(
           selector.selector,
         ) as unknown as HTMLElement[]),
-      ]
+      ];
       if (selector.getAttribute) {
-        return targetElements.map(e => {
-          return e.getAttribute(selector.getAttribute)
-        })
+        return targetElements.map((e) => {
+          return e.getAttribute(selector.getAttribute);
+        });
       } else if (selector.get) {
-        return targetElements.map(e => {
+        return targetElements.map((e) => {
           if (Array.isArray(selector.get)) {
-            let prop: any
+            let prop: any;
             for (const propPath of selector.get) {
               if (!prop) {
-                prop = e?.[propPath as keyof HTMLElement]
+                prop = e?.[propPath as keyof HTMLElement];
               } else {
-                prop = prop[propPath]
+                prop = prop[propPath];
               }
             }
-            return prop
+            return prop;
           } else {
-            let prop: any = e?.[selector.get as keyof HTMLElement]
+            let prop: any = e?.[selector.get as keyof HTMLElement];
             if (typeof prop === 'function') {
-              prop = prop()
+              prop = prop();
             }
-            return prop
+            return prop;
           }
-        })
+        });
       }
-      return targetElements.map(e => e.innerText)
+      return targetElements.map((e) => e.innerText);
     }
     return [
       ...(element.querySelectorAll(selector) as unknown as HTMLElement[]),
-    ].map(e => e.innerText)
+    ].map((e) => e.innerText);
   }
 
   buildFnSelector(selector: any, preSelector?: any) {
-    return preSelector ? `${preSelector}_${selector}` : selector
+    return preSelector ? `${preSelector}_${selector}` : selector;
   }
 }
