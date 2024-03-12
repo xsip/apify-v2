@@ -1,5 +1,6 @@
 export type CineplexxApifyModel = {
-  movieName: string
-  url: string
-  imageUrl: string
+  movieName: string;
+  url: string;
+  imageUrl: string;
+  startDate: string;
 }

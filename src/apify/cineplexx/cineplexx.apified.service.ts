@@ -9,12 +9,14 @@ const detailService: CineplexxDetailsApifiedService =
   new CineplexxDetailsApifiedService()
 
 @Apify<CineplexxApifyModel>({
-  elementContainerSelector: { selector: '.span3:has(.img-holder)' },
+  single: false,
+  elementContainerSelector: { selector: '.l-entity__item' },
   childSelectors: {
     // extracts innerText from .overview-element.seperator h2
-    movieName: 'h2',
-    url: { selector: 'h2 > a', getAttribute: 'href' },
-    imageUrl: { selector: '.content-image.lazy', getAttribute: 'src' },
+    movieName: '.l-entity__figure-caption',
+    url: { selector: '.l-entity__item-link', getAttribute: 'href' },
+    imageUrl: { selector: '.b-image-with-loader__img', getAttribute: 'src' },
+    startDate: '.l-entity__figure-caption_startDate'
   },
   transformers: {
     movieName: async (data, obj) => {
@@ -22,11 +24,11 @@ const detailService: CineplexxDetailsApifiedService =
     },
 
     url: async data => {
-      return 'https:' + data
+      return 'https://www.cineplexx.at' + data
     },
 
     imageUrl: async data => {
-      return 'https:' + data
+      return  data
     },
   },
 })
@@ -34,7 +36,7 @@ export class CineplexxApifiedService
   implements ApifyServiceOptions<CineplexxApifyModel>
 {
   data: CineplexxApifyModel[] = []
-  _url = 'https://www.cineplexx.at/filme/bald-im-kino/'
+  _url = 'https://www.cineplexx.at/film?category=upcoming&date=all'
 
   async load(): Promise<void> {
     console.log('LOAD')
