@@ -5,14 +5,21 @@ import * as fs from 'fs';
 import { Page } from 'puppeteer';
 
 @Apify<WillhabenApifyModel>({
-  elementContainerSelector: '[id^="search-result-entry-header-"]',
+  elementContainerSelector: '[id*="search-result-entry-header-"]',
+  single: true,
   childSelectors: {
     productName: 'h3',
-    productPrice: { selector: 'span', querySelectorAll: true, elementIndex: 0 },
+    productPrice: {
+      selector: 'span',
+      querySelectorAll: true,
+      elementIndex: 0,
+      get: 'outerHTML',
+    },
     productDescription: {
       selector: 'span',
       querySelectorAll: true,
       elementIndex: 1,
+      get: 'outerHTML',
     },
     productDescription2: {
       selector: 'span',
@@ -24,6 +31,7 @@ import { Page } from 'puppeteer';
   },
   transformers: {
     productPrice: async (value) => {
+      console.log(value);
       return parseInt(value.replace('€', '').replace(/\./, ''));
     },
   },
@@ -46,6 +54,9 @@ export class WillhabenApifyService
   }
 
   async onData(data: WillhabenApifyModel[]) {
+    data = data.sort(function (a, b) {
+      return a.productPrice - b.productPrice;
+    });
     fs.writeFileSync('wh.json', JSON.stringify(data, null, 2), 'utf-8');
   }
 }
