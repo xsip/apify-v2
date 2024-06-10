@@ -207,8 +207,11 @@ export class FrontendHandler {
         }
       } else {
         response[key] =
-          (element.querySelector(selectors[key]) as unknown as HTMLElement)
-            ?.innerText ?? ('' as any);
+          (
+            element.querySelector(
+              selectors[key].selector,
+            ) as unknown as HTMLElement
+          )?.innerText ?? ('' as any);
       }
     }
     return responses;
